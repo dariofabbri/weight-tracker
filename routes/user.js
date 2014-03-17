@@ -21,6 +21,10 @@ exports.retrieve = function(req, res) {
 			res.statusCode = 500;
 			return res.send(err);
 		}
+		if(!doc) {
+			res.statusCode = 404;
+			return res.send('User not found.');
+		}
   	res.send(doc);
 	});
 };

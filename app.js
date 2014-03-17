@@ -6,6 +6,39 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
+var BasicStrategy = require('passport-http').BasicStrategy;
+var User = require('./models/user');
+
+// Set up BASIC authentication strategy in PassportJS.
+//
+passport.use(new BasicStrategy({},
+	function(username, password, done) {
+
+		process.nextTick(function () {
+
+			User.findOne({username: username}, function(err, user) {
+
+				console.log(password);
+				console.log(user.password);
+
+				if (err) { 
+					return done(err); 
+				}
+				
+				if (!user) { 
+					return done(null, false); 
+				}
+				
+				if (user.password != password) { 
+					return done(null, false); 
+				}
+
+				return done(null, user);
+			})
+		});
+	}
+));
 
 // Open database connection.
 //
@@ -21,11 +54,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 app.use(app.router);
 
 // Set up routing.
 //
-app.get('/users', users.list);
+app.get('/users', passport.authenticate('basic', { session: false }), users.list);
 app.get('/users/:id', users.retrieve);
 app.post('/users', users.create);
 app.put('/users/:id', users.update);
