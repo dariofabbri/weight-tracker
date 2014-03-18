@@ -44,8 +44,8 @@ passport.use(new BasicStrategy({},
 //
 mongoose.connect('mongodb://localhost:27017/test');
 
-var routes = require('./routes');
 var users = require('./routes/user');
+var observations = require('./routes/observation');
 
 var app = express();
 app.use(favicon());
@@ -53,17 +53,20 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public'));
 app.use(passport.initialize());
 app.use(app.router);
 
 // Set up routing.
 //
 app.get('/users', passport.authenticate('basic', { session: false }), users.list);
-app.get('/users/:id', users.retrieve);
-app.post('/users', users.create);
-app.put('/users/:id', users.update);
-app.delete('/users/:id', users.delete);
+app.get('/users/:id', passport.authenticate('basic', { session: false }), users.retrieve);
+app.post('/users', passport.authenticate('basic', { session: false }), users.create);
+app.put('/users/:id', passport.authenticate('basic', { session: false }), users.update);
+app.delete('/users/:id', passport.authenticate('basic', { session: false }), users.delete);
+
+app.get('/users/:userid/observations', passport.authenticate('basic', { session: false }), observations.list);
+app.post('/users/:userid/observations', passport.authenticate('basic', { session: false }), observations.create);
 
 
 // Catch 404 and forwarding to error handler
