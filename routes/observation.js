@@ -1,9 +1,35 @@
+var moment = require('moment');
+var mongoose = require('mongoose');
 var User = require('../models/user');
 var Observation = require('../models/observation');
 
 exports.list = function(req, res) {
 
-	Observation.find({}, function(err, docs) {
+	var userid = req.params.userid;
+
+	var query = Observation
+		.find({userId: new mongoose.Types.ObjectId(userid)})
+		.sort('observationDate');
+
+	if(req.query.startDate) {
+		var startDate = moment(req.query.startDate);
+		if(!startDate.isValid()) {
+			res.statusCode = 400;
+			return res.send('Invalid startDate query parameter.');
+		}
+		query.where('observationDate').gte(startDate.toDate());
+	}
+
+	if(req.query.endDate) {
+		var endDate = moment(req.query.endDate);
+		if(!endDate.isValid()) {
+			res.statusCode = 400;
+			return res.send('Invalid endDate query parameter.');
+		}
+		query.where('observationDate').lte(endDate.toDate());
+	}
+
+	query.exec(function(err, docs) {
 		if(err) {
 			res.statusCode = 500;
 			return res.send(err);
@@ -15,16 +41,20 @@ exports.list = function(req, res) {
 
 exports.retrieve = function(req, res) {
 
+	var userid = req.params.userid;
 	var id = req.params.id;
 
-	User.findById(id, function(err, doc) {
+	var query = Observation
+		.findOne({userId: new mongoose.Types.ObjectId(userid), _id: new mongoose.Types.ObjectId(id)});
+
+	query.exec(function(err, doc) {
 		if(err) {
 			res.statusCode = 500;
 			return res.send(err);
 		}
 		if(!doc) {
 			res.statusCode = 404;
-			return res.send('User not found.');
+			return res.send('Observation not found.');
 		}
   	res.send(doc);
 	});
@@ -46,6 +76,12 @@ exports.create = function(req, res) {
 		res.statusCode = 400;
 		return res.send('Missing observationDate in request.');
 	}
+	var observationDate = moment(req.body.observationDate);
+	if(!observationDate.isValid()) {
+		res.statusCode = 400;
+		return res.send('Invalid observationDate in request.');
+	}
+	observationDate = observationDate.startOf('day');
 
 	var userid = req.params.userid;
 
@@ -59,11 +95,6 @@ exports.create = function(req, res) {
 			return res.send('User not found.');
 		}
 
-		observationDate = new Date(req.body.observationDate);
-		observationDate = new Date(
-			observationDate.getUTCFullYear(),
-			observationDate.getUTCMonth(),
-			observationDate.getUTCDate());
 
 		// Prepare obervation object to insert in the DB.
 		//
@@ -71,7 +102,7 @@ exports.create = function(req, res) {
 		var observation = new Observation({
 			userId: userid,
 			weight: req.body.weight,
-			observationDate: observationDate,
+			observationDate: observationDate.toDate(),
 			createdOn: now,
 			updatedOn: now
 		});
@@ -92,37 +123,36 @@ exports.create = function(req, res) {
 
 exports.update = function(req, res) {
 
+	var userid = req.params.userid;
 	var id = req.params.id;
 
-	// Retrieve the specified user using the provided id.
-	//
-	User.findById(id, function(err, user) {
+	var query = Observation
+		.findOne({userId: new mongoose.Types.ObjectId(userid), _id: new mongoose.Types.ObjectId(id)});
+
+	query.exec(function(err, observation) {
 		if(err) {
 			res.statusCode = 500;
 			return res.send(err);
 		}
-
-		if(!user) {
+		if(!observation) {
 			res.statusCode = 404;
-			return res.send('User not found.');
+			return res.send('Observation not found.');
 		}
 
-		// Prepare user object for database update.
+		// Prepare observation object for database update.
 		//
-		user.username = req.body.username ? req.body.username : user.username;
-		user.name = req.body.name ? req.body.name : user.name;
-		user.surname = req.body.surname ? req.body.surname : user.surname;
-		user.updatedOn = new Date();
+		observation.weight = req.body.weight ? req.body.weight : observation.weight;
+		observation.updatedOn = new Date();
 
-		// Update the user in the db collection.
+		// Update the observation in the db collection.
 		//
-		user.save(function(err, user) {
+		observation.save(function(err, observation) {
 			if(err) {
 				res.statusCode = 500;
 				return res.send(err);
 			}
 
-			return res.send(user);
+			return res.send(observation);
 		});
 
 	});
@@ -131,21 +161,21 @@ exports.update = function(req, res) {
 
 exports.delete = function(req, res) {
 
+	var userid = req.params.userid;
 	var id = req.params.id;
 
-	// Remove the user from the database.
-	//
-	User.findByIdAndRemove(id, function(err, result) {
+	var query = Observation
+		.findOneAndRemove({userId: new mongoose.Types.ObjectId(userid), _id: new mongoose.Types.ObjectId(id)});
+
+	query.exec(function(err, doc) {
 		if(err) {
 			res.statusCode = 500;
 			return res.send(err);
 		}
-
-		if(!result) {
+		if(!doc) {
 			res.statusCode = 404;
-			return res.send('User not found.');
+			return res.send('Observation not found.');
 		}
-
-		return res.send('User removed.');
+  	res.send('Observation removed');
 	});
 };

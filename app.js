@@ -19,9 +19,6 @@ passport.use(new BasicStrategy({},
 
 			User.findOne({username: username}, function(err, user) {
 
-				console.log(password);
-				console.log(user.password);
-
 				if (err) { 
 					return done(err); 
 				}
@@ -48,7 +45,7 @@ var users = require('./routes/user');
 var observations = require('./routes/observation');
 
 var app = express();
-app.use(favicon());
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -66,7 +63,10 @@ app.put('/users/:id', passport.authenticate('basic', { session: false }), users.
 app.delete('/users/:id', passport.authenticate('basic', { session: false }), users.delete);
 
 app.get('/users/:userid/observations', passport.authenticate('basic', { session: false }), observations.list);
+app.get('/users/:userid/observations/:id', passport.authenticate('basic', { session: false }), observations.retrieve);
 app.post('/users/:userid/observations', passport.authenticate('basic', { session: false }), observations.create);
+app.put('/users/:userid/observations/:id', passport.authenticate('basic', { session: false }), observations.update);
+app.delete('/users/:userid/observations/:id', passport.authenticate('basic', { session: false }), observations.delete);
 
 
 // Catch 404 and forwarding to error handler
