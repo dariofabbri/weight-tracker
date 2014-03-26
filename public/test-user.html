@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+		<meta charset="utf-8">
+		<title>Test user model</title>
+		<script src="http://yui.yahooapis.com/3.15.0/build/yui/yui-min.js"></script>
+
+		<script>
+			YUI_config = {
+		    debug: true,
+		    combine: true,
+		    base: 'js/',
+				modules: {
+					'user-model': {
+						path: 'models/user.js'
+					}
+				}
+			};
+
+			YUI().use('user-model', function(Y) {
+
+				var user1 = new Y.UserModel({
+					username: 'pap313',
+					name: 'paolino',
+					surname: 'paperino',
+					password: 'asecret'
+				});
+
+				Y.log(user1.get('surname'));
+				Y.log(user1);
+				Y.log(user1.toJSON());
+
+				var users = new Y.UserModelList();
+				users.load(function() {
+					Y.log(users);
+				});
+
+				var user = new Y.UserModel({ _id: '531db648f6ebe6cf1ebc53d5' });
+				user.load(function() {
+					Y.log(user);
+					user.set('surname', user.get('surname') + '!');
+					user.save();
+				});
+		});
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
