@@ -6,7 +6,7 @@ YUI.add('the-app', function(Y) {
 		views: {
 			login: { type: 'LoginView' },
 			main: { type: 'MainView' }
-		}
+		}	
 	}, {
 		// Add static properties and methods here.
 		//

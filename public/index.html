@@ -3,6 +3,7 @@
   <head>
 		<meta charset="utf-8">
 		<title>Weight tracker application</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 		<script src="http://yui.yahooapis.com/3.15.0/build/yui/yui-min.js"></script>
 
 		<script>
@@ -23,20 +24,16 @@
 					viewContainer: '#main'
 				});
 
-				var currentView = 'login';
-				app.render().showView(currentView);
+				app.on('loginView:logon', function(e) {
+					this.showView('main');
+				})
 
-				a = function() {
-					currentView = currentView === 'login' ? 'main' : 'login';
-					app.showView(currentView);
-					setTimeout(a, 2000);
-				};
-				setTimeout(a, 2000);
+				app.render().showView('login');
 			});
 
 		</script>
 	</head>
 	<body>
-		<div id="main"></div>
+		<div id="main" class="container"></div>
 	</body>
 </html>

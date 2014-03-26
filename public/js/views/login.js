@@ -20,7 +20,23 @@ YUI.add('login-view', function(Y) {
 			container.setHTML(this.template());
 		},
 
-		initializer: function() {
+		events: {
+			'#loginButton': {
+				click: 'onLoginButtonClick'
+			}
+		},
+
+		onLoginButtonClick: function(e) {
+			
+			// Check credentials...
+			//
+
+			// Signal main app that login went fine.
+			//
+			this.fire('logon', {
+				username: 'antani',
+				password: 'antani'
+			});
 		}
 	});
 
