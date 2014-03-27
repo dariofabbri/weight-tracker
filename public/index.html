@@ -15,7 +15,8 @@
 					'the-app': { path: 'app.js' },
 					'login-view': { path: 'views/login.js' },
 					'main-view': { path: 'views/main.js' },
-					'user-model': { path: 'models/user.js' }
+					'user-model': { path: 'models/user.js' },
+					'base64': { path: 'utils/base64.js' }
 				}
 			};
 
@@ -23,10 +24,6 @@
 				var app = new Y.TheApp({
 					viewContainer: '#main'
 				});
-
-				app.on('loginView:logon', function(e) {
-					this.showView('main');
-				})
 
 				app.render().showView('login');
 			});

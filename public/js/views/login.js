@@ -27,20 +27,47 @@ YUI.add('login-view', function(Y) {
 		},
 
 		onLoginButtonClick: function(e) {
-			
-			// Check credentials...
-			//
 
-			// Signal main app that login went fine.
+			var me = this;
+			
+			// Retrieve form fields.
 			//
-			this.fire('logon', {
-				username: 'antani',
-				password: 'antani'
+			username = Y.one('#username').get('value');
+			password = Y.one('#password').get('value');
+
+			// Check supplied credentials.
+			//
+			var auth = 'Basic ' + Y.Base64.encode(username + ':' + password);
+			var io = new Y.IO();
+			io.send('/login', {
+				method: 'GET',
+				headers: {
+					'Authorization': auth
+				},
+				async: true,
+				username: username,
+				password: password,
+				on: {
+					success: function(t, r) {
+						Y.log(r);
+
+						// Signal main app that login went fine.
+						//
+						me.fire('logon', {
+							username: 'antani',
+							password: 'antani'
+						});
+					},
+
+					failure: function(t, r) {
+						Y.log('Failure!');
+					}
+				}
 			});
 		}
 	});
 
 }, '0.0.1', {
-	requires: [ 'node', 'view', 'handlebars' ]
+	requires: [ 'node', 'view', 'handlebars', 'base64' ]
 });
 

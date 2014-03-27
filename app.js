@@ -56,6 +56,10 @@ app.use(app.router);
 
 // Set up routing.
 //
+app.get('/login', passport.authenticate('basic', { session: false }), function(req, res) {
+	res.send();
+});
+
 app.get('/users', passport.authenticate('basic', { session: false }), users.list);
 app.get('/users/:id', passport.authenticate('basic', { session: false }), users.retrieve);
 app.post('/users', passport.authenticate('basic', { session: false }), users.create);
