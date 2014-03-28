@@ -7,12 +7,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
+var BasicStrategy = require('gt-passport-http').BasicStrategy;
 var User = require('./models/user');
 
 // Set up BASIC authentication strategy in PassportJS.
 //
-passport.use(new BasicStrategy({},
+passport.use(new BasicStrategy({
+		disableBasicChallenge: true
+	},
 	function(username, password, done) {
 
 		process.nextTick(function () {

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+		<meta charset="utf-8">
+		<title>Test user model</title>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+		<script>
+			$.ajax({
+				url: '/login',
+				type: 'GET',
+				success: function() {
+					console.log('OK!');
+				},
+				error: function() {
+					console.log('KO!');
+				}
+			});
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
