@@ -14,6 +14,10 @@ YUI.add('login-view', function(Y) {
 
 		template: template,
 
+		initializer: function() {
+			this.on('key', function() { onLoginButtonClick }, 'enter');
+		},
+
 		render: function() {
 
 			var container = this.get('container');
@@ -21,12 +25,28 @@ YUI.add('login-view', function(Y) {
 		},
 
 		events: {
+			'#username': {
+				keypress: 'onKeyPress'
+			},
+			'#password': {
+				keypress: 'onKeyPress'
+			},
 			'#loginButton': {
 				click: 'onLoginButtonClick'
 			}
 		},
 
+		onKeyPress: function(e) {
+			if(e.keyCode === 13) {
+				this.doLogin();
+			}
+		},
+
 		onLoginButtonClick: function(e) {
+			this.doLogin();
+		},
+
+		doLogin: function() {
 
 			var me = this;
 			
@@ -44,23 +64,23 @@ YUI.add('login-view', function(Y) {
 				headers: {
 					'Authorization': auth
 				},
-				async: true,
-				username: username,
-				password: password,
 				on: {
 					success: function(t, r) {
-						Y.log(r);
 
 						// Signal main app that login went fine.
 						//
 						me.fire('logon', {
-							username: 'antani',
-							password: 'antani'
+							username: username,
+							password: password
 						});
 					},
 
 					failure: function(t, r) {
-						Y.log('Failure!');
+
+						// Prepare the logon failure message.
+						//
+						alertMessage = Y.Node.create('<div class="alert alert-danger">Wrong credential!</div>');
+						Y.one('.panel-body').prepend(alertMessage);
 					}
 				}
 			});
