@@ -77,10 +77,15 @@ YUI.add('login-view', function(Y) {
 
 					failure: function(t, r) {
 
-						// Prepare the logon failure message.
+						// Show alert message.
 						//
-						alertMessage = Y.Node.create('<div class="alert alert-danger">Wrong credential!</div>');
-						Y.one('.panel-body').prepend(alertMessage);
+						var alertNode = Y.Node.create('<div class="alert alert-danger">Wrong credential!</div>').hide(true);
+						Y.one('.panel-body').prepend(alertNode);
+						alertNode.show(true, function() {
+							alertNode.hide(true, { delay: 5 }, function() {
+								alertNode.remove();
+							})
+						});
 					}
 				}
 			});
@@ -88,6 +93,6 @@ YUI.add('login-view', function(Y) {
 	});
 
 }, '0.0.1', {
-	requires: [ 'node', 'view', 'handlebars', 'base64' ]
+	requires: [ 'node', 'view', 'handlebars', 'transition', 'base64' ]
 });
 
