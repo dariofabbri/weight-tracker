@@ -22,10 +22,12 @@
 
 			YUI().use('the-app', function(Y) {
 				var app = new Y.TheApp({
-					viewContainer: '#main'
+					viewContainer: '#main',
+					serverRouting: false,
+					transitions: true
 				});
 
-				app.render().showView('login');
+				app.render().navigate('/login');
 			});
 
 		</script>
