@@ -51,32 +51,32 @@ YUI.add('new-observation-view', function(Y) {
 
 		doSave: function() {
 
-			/*
 			var me = this;
 			
 			// Retrieve form fields.
 			//
-			username = Y.one('#username').get('value');
-			password = Y.one('#password').get('value');
+			observationDate = Y.one('#observationDate').get('value');
+			weight = Y.one('#weight').get('value');
 
-			// Check supplied credentials.
+			// Execute AJAX call.
 			//
 			var auth = 'Basic ' + Y.Base64.encode(username + ':' + password);
 			var io = new Y.IO();
 			io.send('/login', {
-				method: 'GET',
+				method: 'POST',
 				headers: {
 					'Authorization': auth
+				},
+				data: {
+					observationDate: observationDate,
+					weight: parseFloat(weight)
 				},
 				on: {
 					success: function(t, r) {
 
-						// Signal main app that login went fine.
+						// Signal main app that the new observation creation went fine.
 						//
-						me.fire('logon', {
-							username: username,
-							password: password
-						});
+						me.fire('observationCreated');
 					},
 
 					failure: function(t, r) {
@@ -93,7 +93,6 @@ YUI.add('new-observation-view', function(Y) {
 					}
 				}
 			});
-			*/
 		}
 	});
 

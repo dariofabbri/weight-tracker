@@ -63,12 +63,12 @@ YUI.add('login-view', function(Y) {
 				on: {
 					success: function(t, r) {
 
+						// Store credentials and user id.
+						//
+
 						// Signal main app that login went fine.
 						//
-						me.fire('logon', {
-							username: username,
-							password: password
-						});
+						me.fire('logon');
 					},
 
 					failure: function(t, r) {
