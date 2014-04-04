@@ -1,7 +1,7 @@
-YUI.add('login-view', function(Y) {
+YUI.add('new-observation-view', function(Y) {
 
 	var template;
-	Y.io('./templates/login.html', {
+	Y.io('./templates/newObservation.html', {
 		on: {
 			success: function(tx, r) {
 				template = Y.Handlebars.compile(r.responseText);
@@ -10,7 +10,7 @@ YUI.add('login-view', function(Y) {
 		sync: true
 	});
 
-	Y.LoginView = Y.Base.create('loginView', Y.View, [], {
+	Y.NewObservationView = Y.Base.create('newObservationView', Y.View, [], {
 
 		template: template,
 
@@ -18,32 +18,40 @@ YUI.add('login-view', function(Y) {
 
 			var container = this.get('container');
 			container.setHTML(this.template());
+
+			// Preset current date in date field.
+			//
+			container.one('#observationDate').set('value', Y.Date.format(new Date(), { format: '%G-%m-%d'}));
 		},
 
 		events: {
-			'#username': {
+			'#observationDate': {
 				keypress: 'onKeyPress'
 			},
-			'#password': {
+			'#weight': {
 				keypress: 'onKeyPress'
 			},
-			'#loginButton': {
-				click: 'onLoginButtonClick'
+			'#cancelButton': {
+				click: 'onCancelButtonClick'
+			},
+			'#saveButton': {
+				click: 'onSaveButtonClick'
 			}
 		},
 
 		onKeyPress: function(e) {
 			if(e.keyCode === 13) {
-				this.doLogin();
+				this.doSave();
 			}
 		},
 
-		onLoginButtonClick: function(e) {
-			this.doLogin();
+		onSaveButtonClick: function(e) {
+			this.doSave();
 		},
 
-		doLogin: function() {
+		doSave: function() {
 
+			/*
 			var me = this;
 			
 			// Retrieve form fields.
@@ -85,10 +93,11 @@ YUI.add('login-view', function(Y) {
 					}
 				}
 			});
+			*/
 		}
 	});
 
 }, '0.0.1', {
-	requires: [ 'node', 'view', 'handlebars', 'transition', 'base64' ]
+	requires: [ 'node', 'view', 'handlebars', 'transition', 'base64', 'datatype-date-format' ]
 });
 

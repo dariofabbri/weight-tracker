@@ -20,8 +20,25 @@ YUI.add('main-view', function(Y) {
 			container.setHTML(this.template());
 		},
 
-		initializer: function() {
+		events: {
+			'#newObservation': {
+				click: 'onNewObservationButtonClick'
+			},
+			'#history': {
+				click: 'onHistoryButtonClick'
+			},
+			'#logout': {
+				click: 'onLogoutButtonClick'
+			},
+		},
+
+		onNewObservationButtonClick: function() {
+
+			// Signal main app to commute active view.
+			//
+			this.fire('showNewObservation');
 		}
+
 	});
 
 }, '0.0.1', {

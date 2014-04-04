@@ -7,7 +7,8 @@ YUI.add('the-app', function(Y) {
 
 		views: {
 			login: { type: 'LoginView' },
-			main: { type: 'MainView' }
+			main: { type: 'MainView' },
+			newObservation: { type: 'NewObservationView' }
 		},
 
 		initializer: function() {
@@ -15,7 +16,11 @@ YUI.add('the-app', function(Y) {
 			this.on('loginView:logon', function(e) {
 				Y.log(e);
 				this.navigate('/');
-			})
+			});
+
+			this.on('mainView:showNewObservation', function(e) {
+				this.navigate('/newObservation');
+			});
 		},
 
 		showLoginPage: function(req, res) {
@@ -24,6 +29,10 @@ YUI.add('the-app', function(Y) {
 
 		showMainPage: function(req, res) {
 			this.showView('main');
+		},
+
+		showNewObservationPage: function(req, res) {
+			this.showView('newObservation');
 		}
 	}, {
 		// Add static properties and methods here.
@@ -47,6 +56,10 @@ YUI.add('the-app', function(Y) {
 					{ 
 						path: '/login', 
 						callbacks: 'showLoginPage'
+					},
+					{
+						path: '/newObservation',
+						callbacks: 'showNewObservationPage'
 					}
 				]
 			}
@@ -54,6 +67,6 @@ YUI.add('the-app', function(Y) {
 	});
 
 }, '0.0.1', {
-	requires: [ 'app', 'login-view', 'main-view' ]
+	requires: [ 'app', 'login-view', 'main-view', 'new-observation-view' ]
 });
 
