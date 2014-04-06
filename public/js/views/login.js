@@ -65,6 +65,7 @@ YUI.add('login-view', function(Y) {
 
 						// Store credentials and user id.
 						//
+						Y.loginInfo = Y.JSON.parse(r.responseText);
 
 						// Signal main app that login went fine.
 						//
@@ -89,6 +90,6 @@ YUI.add('login-view', function(Y) {
 	});
 
 }, '0.0.1', {
-	requires: [ 'node', 'view', 'handlebars', 'transition', 'base64' ]
+	requires: [ 'node', 'view', 'handlebars', 'transition', 'base64', 'json-parse' ]
 });
 

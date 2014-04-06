@@ -60,9 +60,10 @@ YUI.add('new-observation-view', function(Y) {
 
 			// Execute AJAX call.
 			//
-			var auth = 'Basic ' + Y.Base64.encode(username + ':' + password);
+			var auth = 'Basic ' + Y.Base64.encode(Y.loginInfo.username + ':' + Y.loginInfo.password);
+			var url = '/users/' + Y.loginInfo._id + '/observations';
 			var io = new Y.IO();
-			io.send('/login', {
+			io.send(url, {
 				method: 'POST',
 				headers: {
 					'Authorization': auth

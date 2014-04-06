@@ -59,7 +59,7 @@ app.use(app.router);
 // Set up routing.
 //
 app.get('/login', passport.authenticate('basic', { session: false }), function(req, res) {
-	res.send();
+	res.send(req.user);
 });
 
 app.get('/users', passport.authenticate('basic', { session: false }), users.list);

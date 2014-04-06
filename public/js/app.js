@@ -14,7 +14,6 @@ YUI.add('the-app', function(Y) {
 		initializer: function() {
 
 			this.on('loginView:logon', function(e) {
-				Y.log(e);
 				this.navigate('/');
 			});
 
